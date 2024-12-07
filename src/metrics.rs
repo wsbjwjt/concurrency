@@ -1,12 +1,19 @@
 use anyhow::{anyhow, Result};
 use std::{
     collections::HashMap,
+    fmt,
     sync::{Arc, RwLock},
 };
 
 #[derive(Debug, Clone)]
 pub struct Metrics {
     data: Arc<RwLock<HashMap<String, i64>>>,
+}
+
+impl Default for Metrics {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl Metrics {
@@ -32,8 +39,12 @@ impl Metrics {
     }
 }
 
-impl Default for Metrics {
-    fn default() -> Self {
-        Self::new()
+impl fmt::Display for Metrics {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let data = self.data.read().map_err(|_e| fmt::Error {})?;
+        for (key, value) in data.iter() {
+            writeln!(f, "{}: {}", key, value)?;
+        }
+        Ok(())
     }
 }
