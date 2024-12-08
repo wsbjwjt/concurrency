@@ -48,3 +48,18 @@ impl fmt::Display for Metrics {
         Ok(())
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_metrics() {
+        let metrics = Metrics::new();
+        metrics.inc("test").unwrap();
+        metrics.inc("test").unwrap();
+        metrics.inc("test").unwrap();
+        let snapshot = metrics.snapshot().unwrap();
+        assert_eq!(snapshot["test"], 3);
+    }
+}
