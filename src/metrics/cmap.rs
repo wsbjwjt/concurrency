@@ -3,19 +3,19 @@ use dashmap::DashMap;
 use std::{fmt, sync::Arc};
 
 #[derive(Debug, Clone)]
-pub struct Metrics {
+pub struct CmapMetrics {
     data: Arc<DashMap<String, i64>>,
 }
 
-impl Default for Metrics {
+impl Default for CmapMetrics {
     fn default() -> Self {
         Self::new()
     }
 }
 
-impl Metrics {
+impl CmapMetrics {
     pub fn new() -> Self {
-        Metrics {
+        CmapMetrics {
             data: Arc::new(DashMap::new()),
         }
     }
@@ -27,7 +27,7 @@ impl Metrics {
     }
 }
 
-impl fmt::Display for Metrics {
+impl fmt::Display for CmapMetrics {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         for entry in self.data.iter() {
             writeln!(f, "{}: {}", entry.key(), entry.value())?;
@@ -42,7 +42,7 @@ mod tests {
 
     #[test]
     fn test_metrics() {
-        let metrics = Metrics::new();
+        let metrics = CmapMetrics::new();
         metrics.inc("test").unwrap();
         metrics.inc("test").unwrap();
         assert_eq!(metrics.to_string(), "test: 2\n");
